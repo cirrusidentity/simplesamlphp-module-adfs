@@ -46,7 +46,7 @@ class ADFS
             'adfs:wreply' => false
         ];
 
-        if (isset($query['wreply']) && !empty($query['wreply'])) {
+        if (isset($query['wreply']) && !empty($query['wreply']) && $spMetadata->getValue('prp') !== $query['wreply']) {
             $state['adfs:wreply'] = HTTP::checkURLAllowed($query['wreply']);
         }
 
