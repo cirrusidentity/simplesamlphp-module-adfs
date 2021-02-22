@@ -7,6 +7,7 @@ use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SAML2\Constants;
 
 use SimpleSAML\Auth\State;
+use SimpleSAML\Configuration;
 use SimpleSAML\Utils\Config\Metadata;
 use SimpleSAML\Utils\Crypto;
 use SimpleSAML\Utils\HTTP;
@@ -189,6 +190,12 @@ MSG;
     private static function postResponse($url, $wresult, $wctx)
     {
         $config = \SimpleSAML\Configuration::getInstance();
+        if ($config->getBoolean('usenewui', false) === false) {
+            // response template requires new ui/twig to be enabled
+            $mainConfig = $config->toArray();
+            $mainConfig['usenewui'] = true;
+            $config = Configuration::loadFromArray($mainConfig);
+        }
         $t = new \SimpleSAML\XHTML\Template($config, 'adfs:postResponse.twig');
         $t->data['baseurlpath'] = \SimpleSAML\Module::getModuleURL('adfs');
         $t->data['url'] = $url;
